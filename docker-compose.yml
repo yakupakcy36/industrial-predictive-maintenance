@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  predictive-maintenance-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: industrial-pdm-service
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./artifacts:/app/artifacts
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
